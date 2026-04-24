@@ -1,132 +1,63 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lab 2 — Temperature Converter</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            font-family: sans-serif;
-            background: #f5f5f5;
-            color: #222;
-        }
-
-        nav {
-            background: #fff;
-            border-bottom: 1px solid #ddd;
-            padding: 0 2rem;
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            height: 50px;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: #555;
-            font-size: 0.9rem;
-        }
-
-        nav a:hover { color: #000; }
-        nav a.active { color: #000; font-weight: bold; }
-
-        .container {
-            max-width: 500px;
-            margin: 3rem auto;
-            padding: 0 1.5rem;
-        }
-
-        h1 { font-size: 1.5rem; margin-bottom: 1.5rem; }
-
-        .card {
-            background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            padding: 1.5rem;
-            margin-bottom: 1.25rem;
-        }
-
-        label {
-            display: block;
-            font-size: 0.82rem;
-            color: #666;
-            margin-bottom: 0.3rem;
-        }
-
-        input[type="number"] {
-            width: 100%;
-            padding: 0.5rem 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-            outline: none;
-        }
-
-        input[type="number"]:focus { border-color: #888; }
-
-        button {
-            width: 100%;
-            padding: 0.6rem;
-            background: #222;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            cursor: pointer;
-        }
-
-        button:hover { background: #444; }
-
-        .result p {
-            font-size: 0.95rem;
-            color: #444;
-            line-height: 1.7;
-        }
-
-        .result strong { color: #222; font-size: 1.1rem; }
-    </style>
+  <title>Lab 2 - Temperature Converter</title>
+  <link rel="Stylesheet" href="style.css">
 </head>
 <body>
-
-<nav>
+<nav class="navbar">
+  <div class="logo">ITEC 65 Lab</div>
+  <div class="nav-links">
     <a href="index.php">Home</a>
-    <a href="lab1.php">Lab 1</a>
-    <a href="lab2.php" class="active">Lab 2</a>
-    <a href="lab3.php">Lab 3</a>
+    <a href="lab1.php">Fruits</a>
+    <a href="lab2.php">Temperature</a>
+    <a href="lab3.php">ATM</a>
+  </div>
 </nav>
-
 <div class="container">
-    <h1>Lab 2 — Temperature Converter</h1>
+  <h1>🌡️ Temperature Converter</h1>
+  <p>Convert between Celsius and Fahrenheit</p>
 
-    <div class="card">
-        <form method="post" action="">
-            <label>Temperature in Celsius</label>
-            <input type="number" name="celsius" step="any" placeholder="e.g. 37" required
-                value="<?= isset($_POST['celsius']) ? htmlspecialchars($_POST['celsius']) : '' ?>">
-            <button type="submit">Convert</button>
-        </form>
-    </div>
+  <form method="POST">
+    <label for="temp">Enter Temperature:</label>
+    <input type="number" id="temp" name="temp" placeholder="Enter value" step="0.1" required>
 
-    <?php
-        function celsiusToFahrenheit($celsius) {
-            return ($celsius * 9 / 5) + 32;
-        }
+    <label for="unit">Select Unit:</label>
+    <select id="unit" name="unit" required>
+      <option value="">-- Choose --</option>
+      <option value="celsius">Celsius to Fahrenheit</option>
+      <option value="fahrenheit">Fahrenheit to Celsius</option>
+    </select>
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $celsius    = floatval($_POST['celsius']);
-            $fahrenheit = celsiusToFahrenheit($celsius);
-    ?>
-    <div class="card result">
-        <p>
-            <?= number_format($celsius, 2) ?>°C =   
-            <strong><?= number_format($fahrenheit, 2) ?>°F</strong>
-        </p>
-    </div>
-    <?php } ?>
+    <input type="submit" value="Convert">
+  </form>
+
+  <?php
+  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $temp = floatval($_POST["temp"]);
+    $unit = $_POST["unit"];
+
+    if (empty($unit)) {
+      echo "<div class='error'>❌ Please select a conversion type</div>";
+    } else {
+      if ($unit == "celsius") {
+        $result = ($temp * 9/5) + 32;
+        $from = "°C";
+        $to = "°F";
+      } else {
+        $result = ($temp - 32) * 5/9;
+        $from = "°F";
+        $to = "°C";
+      }
+
+      echo "<div class='result'>";
+      echo "<h3>✓ Conversion Result</h3>";
+      echo "<p><strong>Input:</strong> $temp $from</p>";
+      echo "<p><strong>Output:</strong> " . round($result, 2) . " $to</p>";
+      echo "</div>";
+    }
+  }
+  ?>
 </div>
-
 </body>
 </html>
